@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+TaskFlow AI
 
-## Getting Started
+Next.js Tailwind CSS Supabase Gemini AI
+🚀 The Elevator Pitch
 
-First, run the development server:
+A high-performance, full-stack Kanban task manager that seamlessly blends real-time database syncing with generative AI. Built to demonstrate advanced React state management, asynchronous server-client communication, and clean API architecture.
+🧠 Why I Built It
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Most task managers are static CRUD apps. I wanted to build something that feels alive. TaskFlow AI proves I can handle complex state (managing separate inputs for 3 different columns without bleeding state), wire up a relational database (Projects -> Tasks) using Supabase, and securely pass that data to an LLM to generate actionable insights—all in a sleek, dark-mode interface.
+🛠️ The Architecture
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    Frontend: Next.js 15 (App Router), Tailwind CSS. Minimalist, dark-mode UI built for focus.
+    State Management: React useState and useEffect. Handles optimistic UI updates and asynchronous database fetching without flickering or state collision.
+    Database: Supabase (Postgres). Relational schema connecting Projects to Tasks with a status enum (todo, in_progress, done).
+    AI Integration: Next.js API Routes securely proxy requests to Google Gemini 1.5 Flash. The frontend sends the current task array, and the backend returns a formatted, context-aware summary.
+    Development Speed: Vibe-coded architecture using AI-augmented workflows to ship production-ready features in hours, not weeks.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🚀 Local Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Requires Node.js, a Supabase project, and a Google AI Studio API key.
 
-## Learn More
+git clone https://github.com/Aman-776/taskflow-ai-v2.gitcd taskflow-ai-v2npm installnpm run dev
 
-To learn more about Next.js, take a look at the following resources:
+ 
+Environment Variables (.env.local) 
+text
+ 
+  
+ 
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+GOOGLE_AI_KEY=your_gemini_key
+ 
+ 
+ 
+Database Schema 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Run this in your Supabase SQL Editor to generate the tables: 
+sql
+ 
+  
+ 
+create table projects (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  created_at timestamptz default now()
+);
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+create table tasks (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  status text default 'todo' check (status in ('todo', 'in_progress', 'done')),
+  project_id uuid references projects(id) on delete cascade,
+  position integer default 0,
+  created_at timestamptz default now()
+);
+ 
+ 
+ 
+📫 Contact 
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built by Amanuel | Full-Stack Vibe Coder & Web3 Security Researcher 
